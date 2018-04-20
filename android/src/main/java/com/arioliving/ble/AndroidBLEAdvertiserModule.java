@@ -4,7 +4,6 @@ import com.facebook.react.uimanager.*;
 import com.facebook.react.bridge.*;
 import com.facebook.systrace.Systrace;
 import com.facebook.systrace.SystraceMessage;
-import com.facebook.react.LifecycleState;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -29,6 +28,7 @@ import java.util.Hashtable;
 
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
+    public static final String TAG = "AndroidBleAdvertiser";
     public static final int COMPANY_ID = 0x9999;
     private BluetoothAdapter mBluetoothAdapter;
     
@@ -40,10 +40,11 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     public AndroidBLEAdvertiserModule(ReactApplicationContext reactContext) {
         super(reactContext);
 
-        mCallbackList = new Hashtable<Integer, AdvertiseCallback>();
-        mAdvertiserList = new Hashtable<Integer, BluetoothLeAdvertiser>();
+        mCallbackList = new Hashtable<String, AdvertiseCallback>();
+        mAdvertiserList = new Hashtable<String, BluetoothLeAdvertiser>();
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothManager bluetoothManager = (BluetoothManager) reactContext.getApplicationContext()
+                .getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager != null) {
             mBluetoothAdapter = bluetoothManager.getAdapter();
         } 
@@ -63,9 +64,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
             AdvertiseData data = buildAdvertiseData(payload);
             AdvertiseCallback tempCallback = new AndroidBLEAdvertiserModule.SimpleAdvertiseCallback();
 
-            if (mBluetoothLeAdvertiser != null) {
-                mBluetoothLeAdvertiser.startAdvertising(settings, data, tempCallback);
-            }
+            tempAdvertiser.startAdvertising(settings, data, tempCallback);
 
             mAdvertiserList.put(uid, tempAdvertiser);
             mCallbackList.put(uid, tempCallback);
@@ -86,7 +85,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
         settingsBuilder.setTimeout(200);
         settingsBuilder.setConnectable(false);
-        settingsBuilder.setTxPowerLevel(ADVERTISE_TX_POWER_HIGH);
+        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
         return settingsBuilder.build();
     }
 
