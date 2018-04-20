@@ -75,7 +75,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void cancelPacket(String uid, Promise promise) {
         AdvertiseCallback tempCallback = mCallbackList.remove(uid);
-        AdvertiseCallback tempAdvertiser = mAdvertiserList.remove(uid);
+        BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(uid);
         if (tempCallback != null && tempAdvertiser != null) {
             tempAdvertiser.stopAdvertising(tempCallback);
         }

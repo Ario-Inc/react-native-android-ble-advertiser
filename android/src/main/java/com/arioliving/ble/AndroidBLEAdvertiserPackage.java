@@ -18,10 +18,6 @@ public class AndroidBLEAdvertiserPackage implements ReactPackage {
     modules.add(new AndroidBLEAdvertiserModule(reactContext));
     return modules;
   }
-  @Override
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-      return Collections.emptyList();
-  }
 
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
