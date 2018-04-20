@@ -56,12 +56,17 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sendPacket(String uid, byte[] payload, Promise promise) {
+    public void sendPacket(String uid, ReadableArray payload, Promise promise) {
         if (mBluetoothAdapter != null) {
             BluetoothLeAdvertiser tempAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
 
             AdvertiseSettings settings = buildAdvertiseSettings();
-            AdvertiseData data = buildAdvertiseData(payload);
+            byte[] temp = new byte[payload.size()];
+            for (int i = 0; i < payload.size(); i++) {
+                temp[i] = (byte)payload.getInt(i);
+            }
+
+            AdvertiseData data = buildAdvertiseData(temp);
             AdvertiseCallback tempCallback = new AndroidBLEAdvertiserModule.SimpleAdvertiseCallback();
 
             tempAdvertiser.startAdvertising(settings, data, tempCallback);
@@ -78,6 +83,18 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
         BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(uid);
         if (tempCallback != null && tempAdvertiser != null) {
             tempAdvertiser.stopAdvertising(tempCallback);
+        }
+    }
+
+    @ReactMethod
+    public void cancelAllPackets(Promice promise) {
+        Set<String> keys = mAdvertiserList.keySet();
+        for (String key : keys) {
+            BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(key);
+            AdvertiseCallback tempCallback = mCallbackList.remove(key);
+            if (tempCallback != null && tempAdvertiser != null) {
+                tempAdvertiser.stopAdvertising(tempCallback);
+            }
         }
     }
 
