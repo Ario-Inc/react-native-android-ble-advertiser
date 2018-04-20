@@ -1,0 +1,30 @@
+{
+    "name": "react-native-android-ble-advertiser",
+    "version": "0.0.1",
+    "description": "A react-native implementation for sending BLE advertisements",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "react",
+        "react-component",
+        "react-native",
+        "android",
+        "ble",
+        "bluetooth"
+    ],
+    "author": "Will Dimmit <will@arioliving.com>",
+    "license": "ISC",
+    "repository": "https://github.com/ario-inc/react-native-android-ble-advertiser",
+    "bugs": "https://github.com/ario-inc/react-native-android-ble-advertiser/issues",
+    "peerDependencies": {
+        "react-native": ">=0.50"
+    },
+    "dependencies": {},
+    "rnpm": {
+        "android": {
+            "packageInstance": "new AndroidBLEAdvertiserPackage()"
+        }
+    }
+}
