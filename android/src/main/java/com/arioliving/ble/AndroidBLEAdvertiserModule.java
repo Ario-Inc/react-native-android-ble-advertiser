@@ -87,7 +87,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void cancelAllPackets(Promice promise) {
+    public void cancelAllPackets(Promise promise) {
         Set<String> keys = mAdvertiserList.keySet();
         for (String key : keys) {
             BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(key);
