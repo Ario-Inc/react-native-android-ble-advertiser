@@ -25,6 +25,7 @@ import java.util.List;
 import java.lang.Thread;
 import java.lang.Object;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
