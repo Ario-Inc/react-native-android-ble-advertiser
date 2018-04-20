@@ -2,19 +2,30 @@ package com.arioliving.ble;
 
 import com.facebook.react.uimanager.*;
 import com.facebook.react.bridge.*;
+import com.facebook.systrace.Systrace;
+import com.facebook.systrace.SystraceMessage;
+import com.facebook.react.LifecycleState;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.shell.MainReactPackage;
+import com.facebook.soloader.SoLoader;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.Toast;
 import android.util.Log;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.AdvertiseCallback;
+import android.bluetooth.le.AdvertiseData;
+import android.bluetooth.le.AdvertiseSettings;
+import android.bluetooth.le.BluetoothLeAdvertiser;
 
 import java.util.List;
 import java.lang.Thread;
 import java.lang.Object;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Hashtable;
 
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 

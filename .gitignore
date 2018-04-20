@@ -44,3 +44,5 @@ npm-debug.log
 Example/node_modules/
 Example/andoid/build
 .gradle
+android/.idea
+.idea
