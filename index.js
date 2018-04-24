@@ -1,5 +1,5 @@
 /**
- * @providesModule AndroidWifiModule
+ * @providesModule AndroidBLEAdvertiserModule
  */
 
 'use strict';

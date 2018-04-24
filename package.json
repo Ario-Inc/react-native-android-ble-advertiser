@@ -15,7 +15,7 @@
         "bluetooth"
     ],
     "author": "Will Dimmit <will@arioliving.com>",
-    "license": "ISC",
+    "license": "Apache-2.0",
     "repository": "https://github.com/Ario-Inc/react-native-android-ble-advertiser",
     "bugs": "https://github.com/Ario-Inc/react-native-android-ble-advertiser/issues",
     "peerDependencies": {

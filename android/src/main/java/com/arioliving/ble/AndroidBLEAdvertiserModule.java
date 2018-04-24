@@ -102,7 +102,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     private AdvertiseSettings buildAdvertiseSettings() {
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
-        settingsBuilder.setTimeout(200);
+        settingsBuilder.setTimeout(1000);
         settingsBuilder.setConnectable(false);
         settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
         return settingsBuilder.build();
