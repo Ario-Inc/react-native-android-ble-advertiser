@@ -67,9 +67,11 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     public void sendPacket(String uid, ReadableArray payload, Promise promise) {
         if (companyId == 0x00) {
             Log.w("BLEAdvertiserModule", "Invalid company id");
+            promise.reject("Invalid company id");
         }
         else if (mBluetoothAdapter == null) {
             Log.w("BLEAdvertiserModule", "mBluetoothAdapter unavailable");
+            promise.reject("mBluetoothAdapter unavailable");
         }
         else {
             BluetoothLeAdvertiser tempAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
@@ -87,12 +89,13 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
             mAdvertiserList.put(uid, tempAdvertiser);
             mCallbackList.put(uid, tempCallback);
+            promise.resolve(true);
         }
 
     }
 
     @ReactMethod
-    public void cancelPacket(String uid, Promise promise) {
+    public void cancelPacket(String uid) {
         AdvertiseCallback tempCallback = mCallbackList.remove(uid);
         BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(uid);
         if (tempCallback != null && tempAdvertiser != null) {
@@ -101,7 +104,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void cancelAllPackets(Promise promise) {
+    public void cancelAllPackets() {
         Set<String> keys = mAdvertiserList.keySet();
         for (String key : keys) {
             BluetoothLeAdvertiser tempAdvertiser = mAdvertiserList.remove(key);
