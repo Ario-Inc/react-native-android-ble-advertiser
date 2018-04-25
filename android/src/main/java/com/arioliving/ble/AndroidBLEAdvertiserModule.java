@@ -30,12 +30,12 @@ import java.util.Set;
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
     public static final String TAG = "AndroidBleAdvertiser";
-    public static final int COMPANY_ID = 0x9999;
+    // public static final int COMPANY_ID = 0x9999;
     private BluetoothAdapter mBluetoothAdapter;
     
     private static Hashtable<String, AdvertiseCallback> mCallbackList;
     private static Hashtable<String, BluetoothLeAdvertiser> mAdvertiserList;
-
+    private int companyId;
 
     //Constructor
     public AndroidBLEAdvertiserModule(ReactApplicationContext reactContext) {
@@ -49,6 +49,8 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
         if (bluetoothManager != null) {
             mBluetoothAdapter = bluetoothManager.getAdapter();
         } 
+
+        this.companyId = 0x00;
     }
     
     @Override
@@ -57,8 +59,19 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
+    }
+
+    @ReactMethod
     public void sendPacket(String uid, ReadableArray payload, Promise promise) {
-        if (mBluetoothAdapter != null) {
+        if (companyId == 0x00) {
+            Log.w("BLEAdvertiserModule", "Invalid company id");
+        }
+        else if (mBluetoothAdapter == null) {
+            Log.w("BLEAdvertiserModule", "mBluetoothAdapter unavailable");
+        }
+        else {
             BluetoothLeAdvertiser tempAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
 
             AdvertiseSettings settings = buildAdvertiseSettings();
@@ -112,7 +125,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
         AdvertiseData.Builder dataBuilder = new AdvertiseData.Builder();
         dataBuilder.setIncludeDeviceName(false);
-        dataBuilder.addManufacturerData(COMPANY_ID, payload);
+        dataBuilder.addManufacturerData(companyId, payload);
 
         return dataBuilder.build();
     }
