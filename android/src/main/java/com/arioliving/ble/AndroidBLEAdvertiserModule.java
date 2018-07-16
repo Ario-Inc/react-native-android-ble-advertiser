@@ -30,7 +30,6 @@ import java.util.Set;
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
     public static final String TAG = "AndroidBleAdvertiser";
-    // public static final int COMPANY_ID = 0x9999;
     private BluetoothAdapter mBluetoothAdapter;
     
     private static Hashtable<String, AdvertiseCallback> mCallbackList;
@@ -50,7 +49,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
             mBluetoothAdapter = bluetoothManager.getAdapter();
         } 
 
-        this.companyId = 0x00;
+        this.companyId = 0x0000;
     }
     
     @Override
@@ -65,7 +64,7 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void sendPacket(String uid, ReadableArray payload, Promise promise) {
-        if (companyId == 0x00) {
+        if (companyId == 0x0000) {
             Log.w("BLEAdvertiserModule", "Invalid company id");
             promise.reject("Invalid company id");
         }
