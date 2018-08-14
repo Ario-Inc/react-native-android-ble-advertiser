@@ -114,6 +114,16 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void toggleAdapter(Promise promise) {
+        mBluetoothAdapter.disable();
+        mBluetoothAdapter.enable();
+        while (!mBluetoothAdapter.isEnabled()) {
+
+        }
+        promise.resolve();
+    }
+
     private AdvertiseSettings buildAdvertiseSettings() {
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
