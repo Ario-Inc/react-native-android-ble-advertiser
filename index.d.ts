@@ -4,4 +4,6 @@ export function setCompanyId(companyId: number): void;
 export function sendPacket(uid: String, payload: number[]): Promise<boolean>;
 export function cancelPacket(uid: String): void;
 export function cancelAllPackets(): void;
-export function toggleAdapter(): Promise<void>;
+export function enableAdapter(): void;
+export function disableAdapter(): void;
+export function getAdapterState(): boolean;
