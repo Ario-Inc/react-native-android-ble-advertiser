@@ -6,4 +6,4 @@ export function cancelPacket(uid: String): void;
 export function cancelAllPackets(): void;
 export function enableAdapter(): void;
 export function disableAdapter(): void;
-export function getAdapterState(): boolean;
+export function getAdapterState(): Promise<string>;

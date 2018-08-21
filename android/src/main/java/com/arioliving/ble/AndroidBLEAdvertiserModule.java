@@ -20,6 +20,9 @@ import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import java.util.List;
 import java.lang.Thread;
@@ -29,12 +32,13 @@ import java.util.Set;
 
 public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
-    public static final String TAG = "AndroidBleAdvertiser";
+    public static final String TAG = "AndroidBleAdvertiserXX0";
     private BluetoothAdapter mBluetoothAdapter;
     
     private static Hashtable<String, AdvertiseCallback> mCallbackList;
     private static Hashtable<String, BluetoothLeAdvertiser> mAdvertiserList;
     private int companyId;
+    private Boolean mObservedState;
 
     //Constructor
     public AndroidBLEAdvertiserModule(ReactApplicationContext reactContext) {
@@ -49,7 +53,13 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
             mBluetoothAdapter = bluetoothManager.getAdapter();
         } 
 
+        mObservedState = mBluetoothAdapter.isEnabled();
+
         this.companyId = 0x0000;
+
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        reactContext.registerReceiver(mReceiver, filter);
+
     }
     
     @Override
@@ -116,21 +126,22 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void enableAdapter() {
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON && mBluetoothAdapter.getState() != BluetoothAdapter.STATE_TURNING_ON) {
             mBluetoothAdapter.enable();
         }
     }
 
     @ReactMethod
     public void disableAdapter() {
-        if (mBluetoothAdapter.isEnabled()) {
+        if (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_OFF && mBluetoothAdapter.getState() != BluetoothAdapter.STATE_TURNING_OFF) {
             mBluetoothAdapter.disable();
         }
     }
 
     @ReactMethod
-    public Boolean getAdapterState() {
-        return mBluetoothAdapter.isEnabled();
+    public void getAdapterState(Promise promise) {
+        Log.d(TAG, "Here" + String.valueOf(mBluetoothAdapter.getState()));
+        promise.resolve(String.valueOf(mBluetoothAdapter.getState()));
     }
 
     private AdvertiseSettings buildAdvertiseSettings() {
@@ -165,4 +176,46 @@ public class AndroidBLEAdvertiserModule extends ReactContextBaseJavaModule {
             Log.d(TAG, "Advertising successful");
         }
     }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        final String action = intent.getAction();
+
+        if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+            final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                                                 BluetoothAdapter.ERROR);
+            
+            Log.d(TAG, String.valueOf(state));
+            switch (state) {
+            case BluetoothAdapter.STATE_OFF:
+                mObservedState = false;
+                break;
+            case BluetoothAdapter.STATE_TURNING_OFF:
+                mObservedState = false;
+                break;
+            case BluetoothAdapter.STATE_ON:
+                mObservedState = true;
+                break;
+            case BluetoothAdapter.STATE_TURNING_ON:
+                mObservedState = true;
+                break;
+            }
+        }
+    }
+};
+
+    // @Override
+    // public void onCreate() {
+    //     super.onCreate();
+    //     // Register for broadcasts on BluetoothAdapter state change
+    //     IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+    //     registerReceiver(mReceiver, filter);
+    // }
+
+    // @Override
+    // public void onDestroy() {
+    //     super.onDestroy();
+    //     unregisterReceiver(mReceiver);
+    // }
 }
